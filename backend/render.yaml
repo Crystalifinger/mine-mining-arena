@@ -1,0 +1,33 @@
+# Render Blueprint: one free web service running api + worker + bot together.
+services:
+  - type: web
+    name: arena-mining
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node dist/migrate.js && node dist/seed.js && node dist/all.js
+    healthCheckPath: /health
+    envVars:
+      - { key: NODE_ENV, value: production }
+      - { key: TON_NETWORK, value: testnet }
+      - { key: HOT_WALLET_VERSION, value: v4 }
+      - { key: DB_POOL_MAX, value: "8" }
+      - { key: DATABASE_URL, sync: false }   # Neon DIRECT (non-pooled) connection string
+      - { key: JWT_SECRET, sync: false }
+      - { key: ADMIN_TOKEN, sync: false }
+      - { key: BOT_TOKEN, sync: false }
+      - { key: CORS_ORIGIN, sync: false }
+      - { key: WEBAPP_URL, sync: false }
+      - { key: TONCENTER_API_KEY, sync: false }
+      - { key: HOT_WALLET_ADDRESS, sync: false }
+      - { key: HOT_WALLET_MNEMONIC, sync: false }
+      - { key: MINE_JETTON_MASTER, sync: false }
+      - { key: MINE_DECIMALS, value: "9" }
+      - { key: SUPPORT_CHANNEL, sync: false }
+      - { key: CHANNEL_TASK_REWARD, value: "20" }
+      - { key: TASK_POOL_TOTAL, sync: false }
+      - { key: USER_TASK_COST_PER_JOIN, value: "50" }
+      - { key: USER_TASK_JOINER_REWARD, value: "35" }
+      - { key: USER_TASK_MIN_BUDGET, value: "100" }
+      - { key: USER_TASK_MAX_BUDGET, value: "1000" }
+      - { key: USER_TASK_AUTO_APPROVE, value: "false" }

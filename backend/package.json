@@ -1,0 +1,37 @@
+{
+  "name": "arena-mining-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/server.ts",
+    "dev:worker": "tsx watch src/workers/index.ts",
+    "start": "node dist/server.js",
+    "start:all": "node dist/all.js",
+    "worker": "node dist/workers/index.js",
+    "bot": "node dist/bot.js",
+    "migrate": "node dist/migrate.js",
+    "seed": "node dist/seed.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@fastify/jwt": "^9.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "@ton/core": ">=0.59.0",
+    "@ton/crypto": "^3.3.0",
+    "@ton/ton": "^15.0.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.0.0",
+    "pg": "^8.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

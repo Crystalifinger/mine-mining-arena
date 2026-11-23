@@ -1,0 +1,56 @@
+import { cfg } from '../config.js';
+import { fromChain } from '../units.js';
+import { incomingMessages, jettonTransfers } from '../ton/toncenter.js';
+import { parseComment, sameAddress } from '../ton/payload.js';
+import { getCursor, recordDeposit, setCursor } from '../services/deposits.js';
+
+const PAGE = 100;
+
+async function pollTon() {
+  const cur = await getCursor('ton_in');
+  let last = cur;
+  const now = Math.floor(Date.now() / 1000);
+  for (let offset = 0, stop = false; !stop; offset += PAGE) {
+    const msgs = await incomingMessages({ destination: cfg.HOT_WALLET_ADDRESS, startLt: cur, offset, limit: PAGE });
+    for (const m of msgs) {
+      if (now - Number(m.created_at) < cfg.DEPOSIT_CONFIRM_SECONDS) { stop = true; break; } // wait a few seconds for finality
+      const lt = BigInt(m.created_lt);
+      if (lt > last) last = lt;
+      if (!m.source || m.bounced) continue;
+      if (m.opcode) continue;                       // jetton notifications, excess returns, etc. are not deposits
+      const value = BigInt(m.value || '0');
+      if (value <= 0n) continue;
+      const d = m.message_content?.decoded;
+      const memo = d?.type === 'text_comment' ? (d.comment ?? null) : null;
+      await recordDeposit({ asset: 'TON', amount: value, ref: `ton:${m.hash}`, source: m.source, memo });
+    }
+    if (msgs.length < PAGE) break;
+  }
+  if (last > cur) await setCursor('ton_in', last);
+}
+
+async function pollJettons() {
+  const cur = await getCursor('jetton_in');
+  let last = cur;
+  const now = Math.floor(Date.now() / 1000);
+  for (let offset = 0, stop = false; !stop; offset += PAGE) {
+    const rows = await jettonTransfers({ owner: cfg.HOT_WALLET_ADDRESS, direction: 'in', startLt: cur, offset, limit: PAGE });
+    for (const t of rows) {
+      if (now - t.transaction_now < cfg.DEPOSIT_CONFIRM_SECONDS) { stop = true; break; }
+      const lt = BigInt(t.transaction_lt);
+      if (lt > last) last = lt;
+      if (t.transaction_aborted) continue;
+      if (!sameAddress(t.destination, cfg.HOT_WALLET_ADDRESS) || !sameAddress(t.jetton_master, cfg.MINE_JETTON_MASTER)) continue;
+      const amount = fromChain(BigInt(t.amount), cfg.MINE_DECIMALS);
+      if (amount <= 0n) continue;
+      await recordDeposit({ asset: 'MINE', amount, ref: `jetton:${t.transaction_hash}`, source: t.source, memo: parseComment(t.forward_payload) });
+    }
+    if (rows.length < PAGE) break;
+  }
+  if (last > cur) await setCursor('jetton_in', last);
+}
+
+export async function pollDeposits() {
+  await pollTon();
+  await pollJettons();
+}
