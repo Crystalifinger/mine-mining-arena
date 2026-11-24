@@ -12,4 +12,4 @@ COPY package*.json ./
 RUN npm install --omit=dev
 COPY --from=build /app/dist ./dist
 COPY migrations ./migrations
-CMD ["node", "dist/server.js"]
+CMD ["sh", "-c", "node dist/migrate.js && node dist/seed.js && node dist/all.js"]
