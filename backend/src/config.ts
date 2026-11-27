@@ -28,7 +28,7 @@ const schema = z.object({
   MINE_DECIMALS: z.coerce.number().int().min(0).max(18).default(9),
 
   BLOCK_SECONDS: z.coerce.number().int().min(10).default(600),
-  HALVING_BLOCKS: int(210240),
+  HALVING_BLOCKS: int(0),
   MINING_POOL_TOTAL: dec('0'),
   CLAIM_MIN: dec('0.001'),
 
