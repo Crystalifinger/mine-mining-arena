@@ -3,7 +3,7 @@ import { parseUnits } from './units.js';
 
 export const SLOTS = 12;
 export const REF_HASH = 10_000;     // difficulty 1.00x = 10,000 GH/s on a rank network
-export const FLOOR_HASH = REF_HASH; // a rank network never counts as smaller than this
+export const FLOOR_HASH = 346; // a rank network never counts as smaller than this
 
 // PLACEHOLDER numbers: calibrate with an economy simulation before launch.
 // emission = MINE shared by the whole rank per block; cap = daily withdrawal limit.
