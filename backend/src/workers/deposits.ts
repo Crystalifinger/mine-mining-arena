@@ -51,6 +51,25 @@ async function pollJettons() {
 }
 
 export async function pollDeposits() {
-  await pollTon();
-  await pollJettons();
+  console.log('[DEPOSIT DEBUG] Poll started', {
+    network: cfg.TON_NETWORK,
+    wallet: cfg.HOT_WALLET_ADDRESS,
+    mineMaster: cfg.MINE_JETTON_MASTER,
+    minTon: cfg.DEPOSIT_MIN_TON,
+    minMine: cfg.DEPOSIT_MIN_MINE,
+  });
+
+  try {
+    await pollTon();
+    console.log('[DEPOSIT DEBUG] TON scan completed');
+  } catch (e) {
+    console.error('[DEPOSIT DEBUG] TON scan failed:', e);
+  }
+
+  try {
+    await pollJettons();
+    console.log('[DEPOSIT DEBUG] MINE scan completed');
+  } catch (e) {
+    console.error('[DEPOSIT DEBUG] MINE scan failed:', e);
+  }
 }
