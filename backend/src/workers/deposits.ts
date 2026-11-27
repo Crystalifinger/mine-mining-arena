@@ -71,7 +71,7 @@ console.log('[DEPOSIT DEBUG] MINE transaction:', {
   aborted: t.transaction_aborted,
 });
       if (amount <= 0n) continue;
-      await recordDeposit({ asset: 'MINE', amount, ref: `jetton:${t.transaction_hash}`, source: t.source, memo: parseComment(t.forward_payload) });
+      await recordDeposit({ asset: 'MINE', amount, ref: `jetton:${t.transaction_hash}`, source: t.source, memo });
     }
     if (rows.length < PAGE) break;
   }
