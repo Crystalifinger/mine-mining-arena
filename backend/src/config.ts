@@ -29,7 +29,7 @@ const schema = z.object({
 
   BLOCK_SECONDS: z.coerce.number().int().min(10).default(600),
   HALVING_BLOCKS: int(0),
-  MINING_POOL_TOTAL: dec('0'),
+  MINING_POOL_TOTAL: dec('400000000'),
   CLAIM_MIN: dec('0.001'),
 
   STORE_MINE_BURN_PCT: z.coerce.number().min(0).max(100).default(50),
