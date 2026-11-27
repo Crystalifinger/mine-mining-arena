@@ -12,6 +12,11 @@ async function pollTon() {
   const now = Math.floor(Date.now() / 1000);
   for (let offset = 0, stop = false; !stop; offset += PAGE) {
     const msgs = await incomingMessages({ destination: cfg.HOT_WALLET_ADDRESS, startLt: cur, offset, limit: PAGE });
+    console.log('[DEPOSIT DEBUG] TON messages:', {
+  count: msgs.length,
+  cursor: cur.toString(),
+  offset,
+});
     for (const m of msgs) {
       if (now - Number(m.created_at) < cfg.DEPOSIT_CONFIRM_SECONDS) { stop = true; break; } // wait a few seconds for finality
       const lt = BigInt(m.created_lt);
