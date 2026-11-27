@@ -27,6 +27,16 @@ async function pollTon() {
       if (value <= 0n) continue;
       const d = m.message_content?.decoded;
       const memo = d?.type === 'text_comment' ? (d.comment ?? null) : null;
+      console.log('[DEPOSIT DEBUG] TON transaction:', {
+  hash: m.hash,
+  source: m.source,
+  value: m.value,
+  memoPresent: !!memo,
+  memoLength: memo?.length ?? 0,
+  memoSuffix: memo?.slice(-6) ?? null,
+  opcode: m.opcode,
+  bounced: m.bounced,
+});
       await recordDeposit({ asset: 'TON', amount: value, ref: `ton:${m.hash}`, source: m.source, memo });
     }
     if (msgs.length < PAGE) break;
