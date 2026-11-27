@@ -57,6 +57,19 @@ async function pollJettons() {
       if (t.transaction_aborted) continue;
       if (!sameAddress(t.destination, cfg.HOT_WALLET_ADDRESS) || !sameAddress(t.jetton_master, cfg.MINE_JETTON_MASTER)) continue;
       const amount = fromChain(BigInt(t.amount), cfg.MINE_DECIMALS);
+      const memo = parseComment(t.forward_payload);
+
+console.log('[DEPOSIT DEBUG] MINE transaction:', {
+  hash: t.transaction_hash,
+  source: t.source,
+  destination: t.destination,
+  jettonMaster: t.jetton_master,
+  amount: amount.toString(),
+  memoPresent: !!memo,
+  memoLength: memo?.length ?? 0,
+  memoSuffix: memo?.slice(-6) ?? null,
+  aborted: t.transaction_aborted,
+});
       if (amount <= 0n) continue;
       await recordDeposit({ asset: 'MINE', amount, ref: `jetton:${t.transaction_hash}`, source: t.source, memo: parseComment(t.forward_payload) });
     }
