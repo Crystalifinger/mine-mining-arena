@@ -629,6 +629,15 @@ document.addEventListener('click', e=>{
     case 'slot': slotSheet(+d.i); break;
     case 'rank': rankSheet(); break;
     case 'claim': run(async()=>{ const r=await api('/claim',{}); await loadCore(); render(); toast(`Claimed ${fmt(r.claimed,4)} MINE`); }); break;
+      case 'claimReferral':
+  el.disabled = true;
+  run(async()=>{
+    const r = await api('/referrals/claim',{});
+    await loadCore();
+    render();
+    toast(`Claimed ${fmt(r.claimed,4)} MINE`);
+  }).finally(()=>{el.disabled=false});
+  break;
     case 'buy': buySheet(d.id,d.cur); break;
     case 'confirmBuy': el.disabled=true; run(async()=>{ await api('/store/buy',{typeId:d.id,currency:d.cur}); await loadCore(); closeSheet(); render(); toast('Miner added to Inventory'); }).finally(()=>{el.disabled=false}); break;
     case 'place': run(async()=>{
