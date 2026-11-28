@@ -307,7 +307,7 @@ const ICONS = {
   tasks:`<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/>`,
   wallet:`<path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>`,
 };
-const TABS=[['mine','Mine'],['store','Store'],['bag','Inventory'],['market','Market'],['tasks','Tasks'],['wallet','Wallet']];
+const TABS=[['mine','Mine'],['store','Store'],['bag','Inventory'],['market','Market'],['tasks','Tasks'],['referral','Referral'],['wallet','Wallet']];
 const WD_STATUS = {pending_review:'In review',approved:'Queued',sending:'Sending',sent:'Sent',confirmed:'Completed',rejected:'Rejected',failed:'Failed',needs_review:'Checking'};
 
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
